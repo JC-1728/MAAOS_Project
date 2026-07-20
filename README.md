@@ -2,7 +2,7 @@
 
 ## Team Members
 - Akshay K.S.
-- Annmaria Vinu Scaria
+- Ann Maria Vinu Scaria
 - Jessica Cherian
 - Shijo Varghese
 
