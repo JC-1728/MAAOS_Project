@@ -1,10 +1,6 @@
 import TaskCard from "./TaskCard";
 
-export default function TaskList({
-  tasks,
-  countdown,
-  formatTime,
-}) {
+export default function TaskList({ tasks }) {
   return (
     <div className="space-y-6">
       {tasks.map((task, idx) => (
@@ -12,8 +8,6 @@ export default function TaskList({
           key={task.id}
           task={task}
           idx={idx}
-          countdown={countdown}
-          formatTime={formatTime}
         />
       ))}
     </div>
