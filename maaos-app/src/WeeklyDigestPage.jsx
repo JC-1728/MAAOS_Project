@@ -116,6 +116,28 @@ export default function WeeklyDigestPage({ userId = "student-demo" }) {
     async function loadDigest() {
       setLoading(true);
       try {
+        // First attempt fetching consolidated weekly digest API endpoint (Ann Maria's Phase 5 API)
+        const digestRes = await fetch(`/api/analytics/digest?user_id=${encodeURIComponent(userId)}&week=current`);
+        if (digestRes.ok) {
+          const digestData = await digestRes.json();
+          if (!cancelled) {
+            setTasks([
+              { id: 1, title: "Completed Academic Tasks", status: "completed" },
+              ...Array.from({ length: digestData.throughput.completed - 1 }, (_, i) => ({ id: i + 2, title: `Completed Task #${i + 1}`, status: "completed" })),
+              ...Array.from({ length: digestData.throughput.total - digestData.throughput.completed }, (_, i) => ({ id: 100 + i, title: `Pending Task #${i + 1}`, status: "pending" }))
+            ]);
+            setEmails(digestData.high_volume_sources.map(s => ({ sender: s.name, subject_category: s.tag })));
+            setAnalyticsLogs([
+              { metric: "hours_saved", value: digestData.efficiency_hours, logged_at: new Date().toISOString() },
+              ...digestData.focus_consistency.week.map(w => ({ metric: "active_day", value: w.state !== "empty" ? 1 : 0, logged_at: `${w.date}T12:00:00Z` }))
+            ]);
+            setAgentLogs(digestData.agent_logs || []);
+            setIsUsingDemoData(false);
+            return;
+          }
+        }
+
+        // Fallback parallel requests
         const [tasksRes, emailsRes, logsRes] = await Promise.all([
           fetch(`/api/users/${userId}/tasks?week=current`),
           fetch(`/api/users/${userId}/emails?week=current`),

@@ -16,6 +16,12 @@ export default function ConnectGmailPage({ userId = 'f864c6bd-7932-4877-b3e3-37f
 
   // Fetch connection status and emails on load
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('auth') === 'success') {
+      setMessage({ type: 'success', text: 'Google OAuth connection established successfully! Account paired.' });
+    } else if (params.get('auth') === 'expired') {
+      setMessage({ type: 'error', text: params.get('msg') || 'OAuth authorization code expired or already used.' });
+    }
     fetchStatusAndEmails();
   }, [userId]);
 

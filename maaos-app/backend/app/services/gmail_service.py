@@ -133,6 +133,14 @@ class GmailService:
             db.add(email_record)
             db.commit()
             db.refresh(email_record)
+
+            # Auto-vectorize for smart search
+            try:
+                from app.services.vector_service import VectorService
+                VectorService.vectorize_email(email_record, db)
+            except Exception:
+                pass
+
             synced_emails.append(email_record)
 
         return synced_emails

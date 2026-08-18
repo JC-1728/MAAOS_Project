@@ -1,11 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ConnectGmailPage from './ConnectGmailPage';
+import SmartSearchPage from './SmartSearchPage';
 import WeeklyDigestPage from './WeeklyDigestPage';
 import PricingPage from './PricingPage';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('connect'); // 'connect' | 'digest' | 'pricing'
-  const [userId, setUserId] = useState('f864c6bd-7932-4877-b3e3-37fcdf6538d6');
+  const [activeTab, setActiveTab] = useState('search'); // 'search' | 'digest' | 'connect' | 'pricing'
+  const [userId, setUserId] = useState('ann-maria-student');
+
+  useEffect(() => {
+    // Detect incoming Google OAuth redirect query params
+    const params = new URLSearchParams(window.location.search);
+    const authStatus = params.get('auth');
+    const returnedUserId = params.get('user_id');
+
+    if (authStatus === 'success' && returnedUserId) {
+      setUserId(returnedUserId);
+      setActiveTab('connect');
+    } else if (authStatus === 'expired' || authStatus === 'error') {
+      setActiveTab('connect');
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF9F6]">
@@ -19,30 +34,40 @@ export default function App() {
         </div>
 
         {/* View Switcher Navigation Tabs */}
-        <nav className="flex items-center bg-black/5 p-1 rounded-lg border border-black/10">
+        <nav className="flex items-center bg-black/5 p-1 rounded-lg border border-black/10 gap-1">
           <button
-            onClick={() => setActiveTab('connect')}
-            className={`px-4 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
-              activeTab === 'connect'
+            onClick={() => setActiveTab('search')}
+            className={`px-3.5 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
+              activeTab === 'search'
                 ? 'bg-black text-white shadow-xs'
                 : 'text-black/60 hover:text-black hover:bg-black/5'
             }`}
           >
-            Connect Gmail & Smart Inbox (Ann Maria)
+            Smart Search & Vector DB (Ann Maria)
           </button>
           <button
             onClick={() => setActiveTab('digest')}
-            className={`px-4 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
               activeTab === 'digest'
                 ? 'bg-black text-white shadow-xs'
                 : 'text-black/60 hover:text-black hover:bg-black/5'
             }`}
           >
-            Weekly Digest
+            Weekly Digest (Ann Maria)
+          </button>
+          <button
+            onClick={() => setActiveTab('connect')}
+            className={`px-3.5 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
+              activeTab === 'connect'
+                ? 'bg-black text-white shadow-xs'
+                : 'text-black/60 hover:text-black hover:bg-black/5'
+            }`}
+          >
+            Connect Gmail
           </button>
           <button
             onClick={() => setActiveTab('pricing')}
-            className={`px-4 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-md text-xs font-mono font-semibold transition-all cursor-pointer ${
               activeTab === 'pricing'
                 ? 'bg-black text-white shadow-xs'
                 : 'text-black/60 hover:text-black hover:bg-black/5'
@@ -54,12 +79,12 @@ export default function App() {
 
         {/* User profile identifier control */}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono text-black/40 hidden sm:inline">Active User ID:</span>
+          <span className="text-[11px] font-mono text-black/40 hidden sm:inline">Active User:</span>
           <input
             type="text"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            className="text-xs font-mono bg-white border border-black/15 rounded px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-black w-40"
+            className="text-xs font-mono bg-white border border-black/15 rounded px-2.5 py-1 focus:outline-none focus:ring-1 focus:ring-black w-36"
             title="User ID for API requests"
           />
         </div>
@@ -67,8 +92,9 @@ export default function App() {
 
       {/* Main Display Container */}
       <div className="flex-1">
-        {activeTab === 'connect' && <ConnectGmailPage userId={userId} />}
+        {activeTab === 'search' && <SmartSearchPage userId={userId} />}
         {activeTab === 'digest' && <WeeklyDigestPage userId={userId} />}
+        {activeTab === 'connect' && <ConnectGmailPage userId={userId} />}
         {activeTab === 'pricing' && <PricingPage />}
       </div>
     </div>
