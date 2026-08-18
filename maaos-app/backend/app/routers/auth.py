@@ -34,7 +34,7 @@ def get_google_auth_url(user_id: str | None = None):
     return GoogleAuthURLResponse(auth_url=auth_url)
 
 
-@router.get("/callback")
+@router.get("/callback", response_model=OAuthTokenResponse)
 async def google_oauth_callback(
     code: str = Query(..., description="Authorization code returned by Google OAuth"),
     state: str | None = Query(None, description="User ID or state token"),
@@ -46,13 +46,7 @@ async def google_oauth_callback(
     2. Fetches user info from Google.
     3. Creates/retrieves User in database.
     4. Encrypts and saves OAuth access and refresh tokens.
-    5. Redirects user back to frontend dashboard.
     """
-    from fastapi.responses import RedirectResponse
-
-    # Frontend redirect target
-    frontend_url = "http://localhost:5173"
-
     # 1. Exchange authorization code for tokens
     token_payload = {
         "code": code,
@@ -66,9 +60,9 @@ async def google_oauth_callback(
         token_resp = await client.post(settings.GOOGLE_TOKEN_URI, data=token_payload)
         
         if token_resp.status_code != 200:
-            # If code was already used or expired, redirect back to app with informative parameter
-            return RedirectResponse(
-                url=f"{frontend_url}?auth=expired&msg=Authorization+code+already+used+or+expired.+Please+click+Connect+again."
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Failed to exchange code for OAuth tokens: {token_resp.text}"
             )
         
         token_data = token_resp.json()
@@ -114,6 +108,7 @@ async def google_oauth_callback(
             expires_at=expires_at,
             scopes=scopes_str
         )
+        # Using model setter which automatically encrypts access_token and refresh_token
         token_record.access_token = access_token
         token_record.refresh_token = refresh_token
         db.add(token_record)
@@ -128,9 +123,11 @@ async def google_oauth_callback(
     db.commit()
     db.refresh(token_record)
 
-    # Redirect back to React frontend UI after successful OAuth pairing
-    return RedirectResponse(
-        url=f"{frontend_url}?auth=success&user_id={user.id}&email={user_email}"
+    return OAuthTokenResponse(
+        user_id=user.id,
+        connected=True,
+        email=user.email,
+        expires_at=token_record.expires_at
     )
 
 

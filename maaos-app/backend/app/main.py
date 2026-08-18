@@ -27,14 +27,10 @@ app.add_middleware(
 from app.routers.auth import router as auth_router
 from app.routers.gmail import router as gmail_router
 from app.routers.user import router as user_router
-from app.routers.search import router as search_router
-from app.routers.analytics import router as analytics_router
 
 app.include_router(auth_router)
 app.include_router(gmail_router)
 app.include_router(user_router)
-app.include_router(search_router)
-app.include_router(analytics_router)
 
 @app.get("/")
 def read_root():
