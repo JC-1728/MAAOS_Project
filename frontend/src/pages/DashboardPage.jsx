@@ -8,39 +8,44 @@ import { getTasks } from "../services/taskService";
 import ConnectionStatus from "../components/dashboard/ConnectionStatus";
 import ConnectGmailButton from "../components/dashboard/ConnectGmailButton";
 import WeeklyTimetable from "../components/dashboard/WeeklyTimetable";
-import {
-  connectGmail,
-  getGmailStatus,
-} from "../services/gmailService";
+import { connectGmail, getGmailStatus } from "../services/gmailService";
 import RescheduleButton from "../components/dashboard/RescheduleButton";
+import "../styles/responsive.css";
+
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
   const [gmailConnected, setGmailConnected] = useState(false);
-import "../styles/responsive.css";
-  // Countdown timer effect
-
+  const [countdown, setCountdown] = useState(12800);
 
   useEffect(() => {
     const loadTasks = async () => {
       const data = await getTasks();
-      setTasks(data);
-
-      // Initialize countdown using the first task
-
+      setTasks(data || []);
     };
-
     loadTasks();
   }, []);
+
   useEffect(() => {
     const loadGmailStatus = async () => {
       const status = await getGmailStatus();
       setGmailConnected(status);
     };
-
     loadGmailStatus();
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
+  const formatTime = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleConnectGmail = async () => {
     const success = await connectGmail();
@@ -53,7 +58,6 @@ import "../styles/responsive.css";
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left Sidebar */}
       <Navbar />
-
 
       {/* Main Content */}
       <div className="flex-1 p-8">
@@ -71,7 +75,7 @@ import "../styles/responsive.css";
               <div className="text-right text-xs font-mono text-gray-500">
                 <div>● SYSTEM: ONLINE</div>
                 <div>🔴 RADAR: ENGAGED</div>
-                <div className="mt-2 text-gray-600">SYS-TIME: 11:23:56 UTC</div>
+                <div className="mt-2 text-gray-600">SYS-TIME: {new Date().toLocaleTimeString()}</div>
               </div>
             </div>
           </div>
@@ -83,6 +87,7 @@ import "../styles/responsive.css";
               onConnect={handleConnectGmail}
             />
           </div>
+
           {/* Priority Queue */}
           <div className="mb-12">
             <div className="flex justify-between items-center mb-6">
@@ -102,6 +107,7 @@ import "../styles/responsive.css";
 
           {/* Metrics Cards */}
           <StatusCards />
+
           {/* Weekly Timetable */}
           <WeeklyTimetable />
 
@@ -110,6 +116,5 @@ import "../styles/responsive.css";
         </div>
       </div>
     </div>
-
   );
 }

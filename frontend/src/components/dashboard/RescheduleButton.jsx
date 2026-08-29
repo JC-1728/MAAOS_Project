@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RotateCcw, Check, X, Loader2 } from 'lucide-react';
-import { getSuggestedSlots, applySuggestedSlot } from '../services/schedulingService';
+import { getSuggestedSlots, applySuggestedSlot } from '../../services/schedulingService';
 
 /**
  * One-Click Reschedule button.
