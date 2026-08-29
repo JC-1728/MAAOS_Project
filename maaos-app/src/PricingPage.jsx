@@ -51,7 +51,7 @@ function FaqRow({ item, isOpen, onToggle }) {
     <div className="border-b border-black/10 py-4">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between text-left"
+        className="w-full flex items-center justify-between text-left cursor-pointer"
       >
         <span className="text-sm font-medium">{item.q}</span>
         <ChevronDown
@@ -74,24 +74,6 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#111111] font-sans">
-      <header className="flex items-center justify-between px-10 py-5 border-b border-black/10">
-        <div className="flex items-center gap-2">
-          <span className="font-bold tracking-tight text-sm">MAAOS</span>
-          <span className="text-[10px] font-mono text-black/50 border border-black/15 rounded px-1.5 py-0.5">
-            v1.0.4-stable
-          </span>
-        </div>
-        <nav className="hidden md:flex items-center gap-6 text-[11px] font-mono uppercase tracking-wide text-black/50">
-          <span className="text-black border-b border-black pb-1">Systems</span>
-          <span>Documentation</span>
-          <span>Agents</span>
-          <span>Registry</span>
-        </nav>
-        <button className="text-xs font-mono border border-black/15 rounded px-3 py-1.5 hover:bg-black/5 transition-colors">
-          Get Started
-        </button>
-      </header>
-
       <main className="max-w-4xl mx-auto px-10 py-16">
         {/* Pricing */}
         <section className="mb-20">
@@ -106,9 +88,9 @@ export default function PricingPage() {
             Upgrade only if you want more horsepower.
           </p>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Free tier */}
-            <div className="border border-black/10 rounded-md p-6 bg-white">
+            <div className="border border-black/10 rounded-md p-6 bg-white shadow-sm">
               <p className="text-[10px] font-mono uppercase tracking-wide text-black/40 mb-4">
                 Student
               </p>
@@ -118,19 +100,19 @@ export default function PricingPage() {
               <ul className="space-y-2.5 my-6">
                 {freeFeatures.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-[13px]">
-                    <Check size={14} strokeWidth={2} className="mt-0.5 shrink-0" />
+                    <Check size={14} strokeWidth={2} className="mt-0.5 shrink-0 text-emerald-600" />
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              <button className="w-full border border-black/20 rounded-md py-2.5 text-sm font-medium hover:bg-black/5 transition-colors">
+              <button className="w-full border border-black/20 rounded-md py-2.5 text-sm font-medium hover:bg-black/5 transition-colors cursor-pointer">
                 Get Started Free
               </button>
             </div>
 
             {/* Pro tier */}
-            <div className="border border-black rounded-md p-6 bg-[#111111] text-white relative">
-              <span className="absolute -top-3 right-6 bg-white text-black text-[10px] font-mono uppercase tracking-wide px-2 py-1 rounded">
+            <div className="border border-black rounded-md p-6 bg-[#111111] text-white relative shadow-md">
+              <span className="absolute -top-3 right-6 bg-white text-black text-[10px] font-mono uppercase tracking-wide px-2 py-1 rounded border border-black/10 shadow-sm font-semibold">
                 Recommended
               </span>
               <p className="text-[10px] font-mono uppercase tracking-wide text-white/40 mb-4">
@@ -143,17 +125,17 @@ export default function PricingPage() {
                 {proFeatures.map((f, i) => (
                   <li key={f} className="flex items-start gap-2 text-[13px]">
                     {i === 0 ? (
-                      <span className="font-semibold">{f}</span>
+                      <span className="font-semibold text-white/90">{f}</span>
                     ) : (
                       <>
-                        <Check size={14} strokeWidth={2} className="mt-0.5 shrink-0" />
+                        <Check size={14} strokeWidth={2} className="mt-0.5 shrink-0 text-emerald-400" />
                         <span>{f}</span>
                       </>
                     )}
                   </li>
                 ))}
               </ul>
-              <button className="w-full bg-white text-black rounded-md py-2.5 text-sm font-semibold hover:bg-white/90 transition-colors">
+              <button className="w-full bg-white text-black rounded-md py-2.5 text-sm font-semibold hover:bg-white/90 transition-colors cursor-pointer">
                 Upgrade to Pro
               </button>
             </div>
@@ -186,9 +168,9 @@ export default function PricingPage() {
       <footer className="flex items-center justify-between px-10 py-4 border-t border-black/10 text-[10px] font-mono text-black/40">
         <span>© 2024 ACADEMIC OS KERNEL</span>
         <div className="flex gap-4">
-          <span>License</span>
-          <span>Technical Specs</span>
-          <span>Privacy</span>
+          <span className="hover:underline cursor-pointer">License</span>
+          <span className="hover:underline cursor-pointer">Technical Specs</span>
+          <span className="hover:underline cursor-pointer">Privacy</span>
         </div>
       </footer>
     </div>
