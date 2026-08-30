@@ -1,20 +1,43 @@
 import React, { useState } from 'react';
 import { RotateCcw, Check, X, Loader2 } from 'lucide-react';
-import { getSuggestedSlots, applySuggestedSlot } from '../services/schedulingService';
+
+// IMPORTANT: adjust this relative path to match where YOUR file actually
+// lives relative to src/services/schedulingService.js. Count folder levels:
+//   src/components/dashboard/RescheduleButton.jsx  -> '../../services/schedulingService'
+//   src/components/RescheduleButton.jsx             -> '../services/schedulingService'
+//   src/pages/RescheduleButton.jsx                   -> '../services/schedulingService'
+import { getSuggestedSlots, applySuggestedSlot } from '../../services/schedulingService';
 
 /**
  * One-Click Reschedule button.
- * Given a taskId, fetches ranked suggested time slots from the backend
- * and lets the student apply one with a single click.
+ * REQUIRES a taskId prop — it will not work as <RescheduleButton /> alone.
  *
- * Usage:
- *   <RescheduleButton taskId={task.task_id} onRescheduled={(newDeadline) => ...} />
+ * Usage (inside TaskCard.jsx or wherever a single task is rendered):
+ *   <RescheduleButton
+ *     taskId={task.task_id}
+ *     onRescheduled={(newDeadline) => {
+ *       // update local state / refetch tasks so countdown + timetable reflect the change
+ *     }}
+ *   />
  */
 export default function RescheduleButton({ taskId, onRescheduled }) {
   const [status, setStatus] = useState('idle'); // idle | loading | suggestions | applying | success | error
   const [suggestions, setSuggestions] = useState([]);
   const [conflictsWith, setConflictsWith] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Guard clause: fail loudly and clearly instead of a silent broken click.
+  if (!taskId) {
+    return (
+      <button
+        disabled
+        title="No task selected — this button needs a taskId prop"
+        className="border-2 border-gray-300 text-gray-400 px-4 py-2 text-sm font-bold flex items-center gap-2 cursor-not-allowed"
+      >
+        <RotateCcw size={16} /> RESCHEDULE (no task)
+      </button>
+    );
+  }
 
   const handleReschedule = async () => {
     setStatus('loading');
@@ -24,7 +47,6 @@ export default function RescheduleButton({ taskId, onRescheduled }) {
       const result = await getSuggestedSlots(taskId);
 
       if (!result.has_conflict) {
-        // No conflict found — nothing to reschedule.
         setStatus('idle');
         setErrorMessage('No conflict detected for this task.');
         return;
@@ -47,7 +69,6 @@ export default function RescheduleButton({ taskId, onRescheduled }) {
       setStatus('success');
       if (onRescheduled) onRescheduled(result.new_deadline);
 
-      // Reset back to idle after a moment so the button is reusable.
       setTimeout(() => {
         setStatus('idle');
         setSuggestions([]);
@@ -89,7 +110,7 @@ export default function RescheduleButton({ taskId, onRescheduled }) {
       )}
 
       {status === 'suggestions' && (
-        <div className="absolute z-10 mt-2 w-96 bg-white border-2 border-black rounded shadow-lg p-4 right-0">
+        <div className="absolute z-10 mt-2 w-96 bg-white border-2 border-black rounded shadow-lg p-4 right-0 reschedule-suggestions-popover">
           <div className="flex justify-between items-start mb-3">
             <div>
               <p className="text-xs font-mono text-gray-500">CONFLICT DETECTED</p>

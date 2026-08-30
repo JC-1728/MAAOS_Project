@@ -1,5 +1,5 @@
 import React from 'react';
-import { days, getTodaySchedule, getFlatSchedule } from '../data/timetable';
+import { days, getTodaySchedule, getFlatSchedule } from '../../data/timetable';
 
 /**
  * Mobile-only agenda list rendering of the timetable. Shown when the

@@ -269,7 +269,9 @@ def suggest_slots(
 def _explain_slot(slot: SuggestedSlot, task: CalendarEvent, rank: int) -> str:
     """Human-readable justification shown in the UI next to each suggestion."""
     day_label = slot.start.strftime("%A")
-    time_label = f"{slot.start.strftime('%-I:%M %p')} - {slot.end.strftime('%-I:%M %p')}"
+    start_str = slot.start.strftime("%I:%M %p").lstrip("0")
+    end_str = slot.end.strftime("%I:%M %p").lstrip("0")
+    time_label = f"{start_str} - {end_str}"
     if rank == 1:
         return f"Best fit: {day_label}, {time_label} — matches your usual study block length."
     return f"Also open: {day_label}, {time_label}"

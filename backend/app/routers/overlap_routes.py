@@ -5,11 +5,12 @@ FastAPI router exposing the Adaptive Planner's
 overlap-detection and slot-suggestion logic.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from app.services.overlap_engine import (
     CalendarEvent,
@@ -17,6 +18,8 @@ from app.services.overlap_engine import (
     detect_overlaps,
     resolve_conflict,
 )
+from app.database import get_db
+from app import models
 
 
 router = APIRouter(
@@ -73,6 +76,12 @@ class ResolveRequest(BaseModel):
     preferred_block_minutes: int = 60
 
 
+class ApplySlotRequest(BaseModel):
+    task_id: int
+    new_start: datetime
+    new_end: datetime
+
+
 # ============================================================
 # HELPER
 # ============================================================
@@ -124,13 +133,14 @@ def check_overlaps(payload: OverlapCheckRequest):
 
 
 # ============================================================
-# CONFLICT RESOLUTION / RESCHEDULING
+# CONFLICT RESOLUTION / RESCHEDULING (payload-based)
 # ============================================================
 
 @router.post("/resolve", response_model=ResolveResponse)
 def resolve(payload: ResolveRequest):
     """
     Find conflicts for a task and suggest alternative time slots.
+    Used when the frontend already holds the full event list in memory.
     """
 
     task = _to_calendar_event(payload.task)
@@ -166,6 +176,114 @@ def resolve(payload: ResolveRequest):
             for conflict in result["conflicts_with"]
         ],
         "suggestions": result["suggestions"],
+    }
+
+
+# ============================================================
+# CONFLICT RESOLUTION / RESCHEDULING (DB-backed, by task_id)
+# ============================================================
+
+@router.get("/resolve/{task_id}", response_model=ResolveResponse)
+def resolve_by_task_id(
+    task_id: int,
+    search_horizon_days: int = 7,
+    db: Session = Depends(get_db),
+):
+    """
+    Convenience GET version: given a task_id already stored in the
+    database, pull it plus the user's other tasks/schedule entries
+    automatically and run the same resolution pipeline. This is the
+    endpoint RescheduleButton.jsx calls — it only needs a task_id.
+
+    Note: tasks are modeled as 1-hour blocks ending at their stored
+    `deadline`, since the current schema has no explicit start_time
+    column for tasks (only `schedules`, i.e. fixed classes, have one).
+    """
+
+    task_row = db.query(models.Task).filter(models.Task.task_id == task_id).first()
+    if not task_row:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if not task_row.deadline:
+        raise HTTPException(status_code=400, detail="Task has no deadline set; cannot schedule")
+
+    task = CalendarEvent(
+        event_id=str(task_row.task_id),
+        title=task_row.title,
+        start=task_row.deadline - timedelta(hours=1),
+        end=task_row.deadline,
+        priority=task_row.priority or 1,
+    )
+
+    other_tasks = (
+        db.query(models.Task)
+        .filter(models.Task.user_id == task_row.user_id, models.Task.task_id != task_id)
+        .all()
+    )
+    other_schedules = (
+        db.query(models.Schedule)
+        .filter(models.Schedule.user_id == task_row.user_id)
+        .all()
+    )
+
+    context_events = []
+    for t in other_tasks:
+        if t.deadline:
+            context_events.append(
+                CalendarEvent(
+                    event_id=str(t.task_id),
+                    title=t.title,
+                    start=t.deadline - timedelta(hours=1),
+                    end=t.deadline,
+                    priority=t.priority or 1,
+                )
+            )
+    for s in other_schedules:
+        context_events.append(
+            CalendarEvent(
+                event_id=f"sched-{s.schedule_id}",
+                title=s.activity or "Class",
+                start=s.start_time,
+                end=s.end_time,
+                source="class",
+                priority=5,  # fixed class times outrank movable tasks
+            )
+        )
+
+    result = resolve_conflict(
+        conflicted_task=task,
+        all_events=context_events + [task],
+        search_horizon_days=search_horizon_days,
+    )
+
+    return {
+        "has_conflict": result["has_conflict"],
+        "conflicts_with": result["conflicts_with"],
+        "suggestions": result["suggestions"],
+    }
+
+
+@router.post("/apply")
+def apply_suggested_slot(payload: ApplySlotRequest, db: Session = Depends(get_db)):
+    """
+    Commit a chosen suggestion: update the task's deadline in the
+    database to the new slot's end time. Called when the student clicks
+    a specific suggestion card in the UI.
+    """
+
+    task_row = db.query(models.Task).filter(models.Task.task_id == payload.task_id).first()
+    if not task_row:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    task_row.deadline = payload.new_end
+    db.commit()
+    db.refresh(task_row)
+
+    return {
+        "task_id": task_row.task_id,
+        "title": task_row.title,
+        "new_deadline": task_row.deadline.isoformat(),
+        "message": "Task rescheduled successfully",
     }
 
 
