@@ -1,0 +1,312 @@
+/*
+  responsive.css
+  Phase 5 deliverable (Jessica): "Finalize mobile-responsive CSS for all
+  dashboard components."
+
+  Import this AFTER your Tailwind base styles (or after App.css) so these
+  overrides take priority at small breakpoints:
+    import './styles/responsive.css';
+
+  Breakpoints used:
+    - tablet:  max-width 1024px
+    - mobile:  max-width 640px
+    - small:   max-width 380px (compact phones)
+*/
+
+/* ==================== GLOBAL SAFETY NET ==================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden; /* prevents horizontal scroll from any stray wide element */
+}
+
+/* ==================== DASHBOARD LAYOUT ==================== */
+
+@media (max-width: 1024px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .dashboard-main {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-sidebar {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.75rem;
+    gap: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dashboard-sidebar nav {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .dashboard-sidebar button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .dashboard-main {
+    padding: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem; /* was text-5xl (3rem) on desktop */
+  }
+
+  .dashboard-header .header-meta {
+    display: none; /* SYS-TIME / status badges hidden to save vertical space */
+  }
+}
+
+/* ==================== PRIORITY QUEUE / TASK CARDS ==================== */
+
+@media (max-width: 640px) {
+  .task-card {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .task-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .task-card-countdown {
+    align-self: flex-start;
+    font-size: 1.1rem; /* countdown still needs to be readable, don't shrink too far */
+  }
+
+  .task-card-progress-bar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .task-card {
+    padding: 1rem;
+  }
+
+  .task-card h3 {
+    font-size: 0.95rem;
+  }
+}
+
+/* ==================== METRICS GRID ==================== */
+
+@media (max-width: 1024px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* ==================== SUPPORTING AGENTS GRID ==================== */
+
+@media (max-width: 640px) {
+  .agents-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .agent-card {
+    padding: 1.25rem;
+  }
+}
+
+/* ==================== TIMETABLE ==================== */
+/*
+  A full 6-period-plus-break grid does not fit a phone screen at
+  readable font sizes. Instead of shrinking text illegibly, the
+  timetable switches from a grid to a stacked agenda list per day.
+*/
+
+@media (max-width: 768px) {
+  .timetable-grid-table {
+    display: none;
+  }
+
+  .timetable-agenda-view {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .timetable-agenda-view {
+    display: none;
+  }
+}
+
+.timetable-agenda-day {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 0;
+}
+
+.timetable-agenda-day-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.timetable-agenda-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid #000;
+  margin-bottom: 0.4rem;
+  background: #f9fafb;
+  border-radius: 0 4px 4px 0;
+}
+
+.timetable-agenda-slot.is-lab {
+  border-left-color: #22c55e;
+}
+
+.timetable-agenda-slot.is-free {
+  border-left-color: #d1d5db;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.timetable-agenda-time {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: #6b7280;
+}
+
+/* ==================== BUTTONS ==================== */
+
+@media (max-width: 640px) {
+  .btn-full-mobile {
+    width: 100%;
+  }
+
+  /* Reschedule button suggestion popover: pin to full width and
+     reposition below the button rather than overflowing off-screen. */
+  .reschedule-suggestions-popover {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    top: auto;
+    bottom: 1rem;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+/* ==================== STATUS CARDS (stats row) ==================== */
+
+@media (max-width: 1024px) {
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-row .stat-wide {
+    grid-column: span 2;
+  }
+}
+
+/* ==================== QUERY / COORDINATOR CHAT SECTION ==================== */
+
+@media (max-width: 640px) {
+  .coordinator-query-box {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .coordinator-query-box input {
+    width: 100%;
+  }
+
+  .coordinator-query-box button {
+    width: 100%;
+  }
+
+  .coordinator-chat-messages {
+    max-height: 50vh;
+  }
+}
+
+/* ==================== AGENT EXECUTION LOG ==================== */
+
+@media (max-width: 640px) {
+  .agent-log-panel {
+    font-size: 0.7rem;
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+}
+
+/* ==================== PRICING CARDS ==================== */
+
+@media (max-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ==================== NAVIGATION ==================== */
+
+@media (max-width: 768px) {
+  .top-nav-links {
+    display: none; /* replace with a hamburger menu component if needed */
+  }
+
+  .top-nav-cta {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==================== ACCESSIBILITY: REDUCED MOTION ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==================== FOCUS VISIBILITY (keyboard nav) ==================== */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
