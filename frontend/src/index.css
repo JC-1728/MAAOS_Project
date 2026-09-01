@@ -1,1 +1,44 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  @apply bg-paper text-ink;
+  font-feature-settings: "ss01";
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* corner brackets used on the auth screen background, matching the reference design */
+.corner-frame {
+  position: relative;
+}
+.corner-frame::before,
+.corner-frame::after,
+.corner-frame .corner-tl,
+.corner-frame .corner-br {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: #0a0a0a;
+}
+.corner-frame::before {
+  top: 0; left: 0;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.corner-frame::after {
+  bottom: 0; right: 0;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(10,10,10,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10,10,10,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}

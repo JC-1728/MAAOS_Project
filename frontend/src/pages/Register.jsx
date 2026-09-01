@@ -41,14 +41,19 @@ export default function Register() {
 
     setLoading(true)
     try {
-      await register({
+      const data = await register({
         name: form.name,
         studentId: form.studentId,
         email: form.email,
         password: form.password,
         institution: form.institution,
       })
-      navigate('/login')
+      if (data && data.access_token) {
+        localStorage.setItem('maaos_token', data.access_token)
+        navigate('/dashboard')
+      } else {
+        navigate('/login')
+      }
     } catch (err) {
       setError(err.message || 'Registration failed.')
     } finally {

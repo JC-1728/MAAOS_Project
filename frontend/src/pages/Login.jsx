@@ -19,7 +19,7 @@ export default function Login() {
     }
     setLoading(true)
     try {
-      const data = await login({ identifier, password })
+      const data = await login({ identifier: identifier.trim(), password })
       localStorage.setItem('maaos_token', data.access_token)
       navigate('/dashboard')
     } catch (err) {
