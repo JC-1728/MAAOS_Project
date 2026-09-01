@@ -19,6 +19,7 @@ export async function checkOverlaps(events) {
   return response.json();
 }
 
+
 /**
  * Get ranked suggested time slots for a task already saved in the DB.
  * This is what RescheduleButton calls when the user clicks the button.
@@ -89,5 +90,5 @@ export default {
   getSuggestedSlots,
   resolveConflict,
   rescheduleTasks,
-  applySuggestedSlot,
+  applySuggestedSlot
 };

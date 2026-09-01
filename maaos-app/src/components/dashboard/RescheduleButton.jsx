@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { RotateCcw, Check, X, Loader2 } from 'lucide-react';
 
-// IMPORTANT: adjust this relative path to match where YOUR file actually
-// lives relative to src/services/schedulingService.js. Count folder levels:
-//   src/components/dashboard/RescheduleButton.jsx  -> '../../services/schedulingService'
-//   src/components/RescheduleButton.jsx             -> '../services/schedulingService'
-//   src/pages/RescheduleButton.jsx                   -> '../services/schedulingService'
 import { getSuggestedSlots, applySuggestedSlot } from '../../services/schedulingService';
 
 /**

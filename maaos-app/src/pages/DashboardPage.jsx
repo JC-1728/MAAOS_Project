@@ -1,29 +1,27 @@
 import React, { useState, useEffect } from 'react';
-
-// From src/pages/DashboardPage.jsx: go up one level (../) to reach src/,
-// then down into components/dashboard/ or services/.
-
-import ConnectionStatus from '../components/dashboard/ConnectionStatus';
-import ConnectGmailButton from '../components/dashboard/ConnectGmailButton';
-import StatusCards from '../components/dashboard/StatusCards';
-import TaskList from '../components/dashboard/TaskList';
-import RescheduleButton from '../components/dashboard/RescheduleButton';
-import WeeklyTimetable from '../components/dashboard/WeeklyTimetable';
-import QuerySection from '../components/dashboard/QuerySection';
-import AgentPanel from '../components/dashboard/AgentPanel';
-
-import { getTasks } from '../services/taskService';
+import Navbar from "../components/dashboard/Navbar";
+import TaskList from "../components/dashboard/TaskList";
+import StatusCards from "../components/dashboard/StatusCards";
+import QuerySection from "../components/dashboard/QuerySection";
+import AgentPanel from "../components/dashboard/AgentPanel";
+import ConnectionStatus from "../components/dashboard/ConnectionStatus";
+import ConnectGmailButton from "../components/dashboard/ConnectGmailButton";
+import WeeklyTimetable from "../components/dashboard/WeeklyTimetable";
+import RescheduleButton from "../components/dashboard/RescheduleButton";
+import { getTasks } from "../services/taskService";
+import { connectGmail, getGmailStatus } from "../services/gmailService";
+import "../styles/responsive.css";
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
+  const [gmailConnected, setGmailConnected] = useState(false);
   const [countdown, setCountdown] = useState({});
 
-  // ==================== LOAD TASKS ====================
   useEffect(() => {
     const loadTasks = async () => {
       try {
         const data = await getTasks();
-        setTasks(data);
+        setTasks(data || []);
       } catch (err) {
         console.error('Failed to load tasks:', err);
       }
@@ -31,9 +29,6 @@ export default function DashboardPage() {
     loadTasks();
   }, []);
 
-  // ==================== LIVE COUNTDOWN ====================
-  // Recomputes every second for whichever task is soonest-due (tasks[0]
-  // is assumed to already be sorted by deadline — adjust if not).
   useEffect(() => {
     if (!tasks.length) return;
 
@@ -53,12 +48,11 @@ export default function DashboardPage() {
       setCountdown({ days, hours, minutes, seconds });
     };
 
-    tick(); // run immediately so there's no 1s blank flash
+    tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
   }, [tasks]);
 
-  // ==================== FORMAT HELPER ====================
   const formatTime = (days, hours, minutes, seconds) => {
     const h = String(hours ?? 0).padStart(2, '0');
     const m = String(minutes ?? 0).padStart(2, '0');
@@ -66,9 +60,13 @@ export default function DashboardPage() {
     return days > 0 ? `${days}d ${h}:${m}:${s}` : `${h}:${m}:${s}`;
   };
 
-  // ==================== RESCHEDULE CALLBACK ====================
-  // When a task is rescheduled, refresh the task list so the countdown
-  // and timetable both reflect the new deadline immediately.
+  const handleConnectGmail = async () => {
+    const success = await connectGmail();
+    if (success) {
+      setGmailConnected(true);
+    }
+  };
+
   const handleRescheduled = async () => {
     try {
       const data = await getTasks();
@@ -87,14 +85,16 @@ export default function DashboardPage() {
         </div>
 
         <div className="mb-8">
-          <ConnectGmailButton />
+          <ConnectGmailButton
+            connected={gmailConnected}
+            onConnect={handleConnectGmail}
+          />
         </div>
 
         <div className="stats-row mb-12">
           <StatusCards tasks={tasks} />
         </div>
 
-        {/* Priority Queue with live countdown + reschedule per task */}
         <div className="mb-12">
           <TaskList tasks={tasks} countdown={countdown} formatTime={formatTime} />
 
@@ -108,17 +108,16 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Weekly Timetable */}
         <div className="mb-12">
           <WeeklyTimetable />
         </div>
 
         <div className="mb-12">
-          <QuerySection />
+          <AgentPanel />
         </div>
 
         <div className="mb-12">
-          <AgentPanel />
+          <QuerySection />
         </div>
       </div>
     </div>
