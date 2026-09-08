@@ -13,6 +13,7 @@ import QuerySection from '../components/dashboard/QuerySection';
 import AgentPanel from '../components/dashboard/AgentPanel';
 
 import { getTasks } from '../services/taskService';
+import ThemeSettingsPanel from '../components/ThemeSettingsPanel';
 
 export default function DashboardPage() {
   const [tasks, setTasks] = useState([]);
@@ -79,10 +80,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="dashboard-layout min-h-screen bg-gray-50 flex">
+    <div className="dashboard-layout min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex">
+      <ThemeSettingsPanel />
       <div className="dashboard-main flex-1 p-8">
         <div className="dashboard-header mb-8 flex justify-between items-start">
-          <h1 className="text-5xl font-bold">DEADLINE RADAR</h1>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-600">DEADLINE RADAR</h1>
           <ConnectionStatus />
         </div>
 
