@@ -34,7 +34,7 @@ export default function TaskCard({ task, idx }) {
   };
 
   return (
-    <div className="border-2 border-gray-300 rounded p-6 bg-white hover:shadow-md transition">
+    <div className="border border-slate-200 dark:border-slate-700 rounded-2xl p-6 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md shadow-sm hover:shadow-xl hover:shadow-primary-500/10 hover:scale-[1.01] transition-all duration-300">
 
       <div className="flex justify-between items-start mb-4">
 
@@ -45,11 +45,11 @@ export default function TaskCard({ task, idx }) {
             [{task.category}]
           </span>
 
-          <h3 className="text-lg font-bold mb-2">
+          <h3 className="text-lg font-bold mb-2 text-slate-900 dark:text-white">
             {task.title}
           </h3>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             {task.description}
           </p>
         </div>
@@ -102,9 +102,9 @@ export default function TaskCard({ task, idx }) {
         <button
           onClick={handleReschedule}
           disabled={loading}
-          className="w-full border-2 border-black px-4 py-3 text-sm font-bold hover:bg-black hover:text-white transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-4 border-2 border-primary-600 dark:border-primary-500 rounded-xl px-4 py-3 text-sm font-bold text-primary-700 dark:text-primary-400 hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed group"
         >
-          <RotateCcw size={16} />
+          <RotateCcw size={16} className="group-hover:animate-spin-slow" />
 
           {loading
             ? "ANALYZING SCHEDULE..."
