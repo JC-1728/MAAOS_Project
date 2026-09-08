@@ -1,44 +1,75 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-html, body {
-  @apply bg-paper text-ink;
-  font-feature-settings: "ss01";
-}
-
-* {
-  -webkit-font-smoothing: antialiased;
-}
-
-/* corner brackets used on the auth screen background, matching the reference design */
-.corner-frame {
-  position: relative;
-}
-.corner-frame::before,
-.corner-frame::after,
-.corner-frame .corner-tl,
-.corner-frame .corner-br {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-color: #0a0a0a;
-}
-.corner-frame::before {
-  top: 0; left: 0;
-  border-top: 2px solid;
-  border-left: 2px solid;
-}
-.corner-frame::after {
-  bottom: 0; right: 0;
-  border-bottom: 2px solid;
-  border-right: 2px solid;
+/*
+  Add base styles for Tailwind v4 custom primary colors.
+  We will map primary color palette via CSS variables.
+*/
+@theme {
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-900: var(--primary-900);
 }
 
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(10,10,10,0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10,10,10,0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
+@layer base {
+  :root {
+    --primary-50: #eff6ff;
+    --primary-100: #dbeafe;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-900: #1e3a8a;
+  }
+  
+  :root.theme-blue {
+    --primary-50: #eff6ff;
+    --primary-100: #dbeafe;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-900: #1e3a8a;
+  }
+
+  :root.theme-rose {
+    --primary-50: #fff1f2;
+    --primary-100: #ffe4e6;
+    --primary-500: #f43f5e;
+    --primary-600: #e11d48;
+    --primary-900: #881337;
+  }
+
+  :root.theme-emerald {
+    --primary-50: #ecfdf5;
+    --primary-100: #d1fae5;
+    --primary-500: #10b981;
+    --primary-600: #059669;
+    --primary-900: #064e3b;
+  }
+  
+  :root.theme-violet {
+    --primary-50: #f5f3ff;
+    --primary-100: #ede9fe;
+    --primary-500: #8b5cf6;
+    --primary-600: #7c3aed;
+    --primary-900: #4c1d95;
+  }
+
+  :root.theme-amber {
+    --primary-50: #fffbeb;
+    --primary-100: #fef3c7;
+    --primary-500: #f59e0b;
+    --primary-600: #d97706;
+    --primary-900: #78350f;
+  }
+
+  :root.theme-slate {
+    --primary-50: #f8fafc;
+    --primary-100: #f1f5f9;
+    --primary-500: #64748b;
+    --primary-600: #475569;
+    --primary-900: #0f172a;
+  }
+}
+
+body {
+  @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300;
 }

@@ -1,0 +1,30 @@
+[31m✗[39m Build failed in 239ms
+[31merror during build:
+[31mBuild failed with 1 error:
+
+[plugin vite:css] d:/MAAOS/frontend/src/index.css
+Failed to load PostCSS config: Failed to load PostCSS config (searchPath: d:/MAAOS/frontend): [Error] Loading PostCSS Plugin failed: Cannot find module 'autoprefixer'
+Require stack:
+- d:\MAAOS\frontend\postcss.config.js
+
+(@d:\MAAOS\frontend\postcss.config.js)
+Error: Loading PostCSS Plugin failed: Cannot find module 'autoprefixer'
+Require stack:
+- d:\MAAOS\frontend\postcss.config.js
+
+(@d:\MAAOS\frontend\postcss.config.js)
+    at load (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:21486:10)
+    at async Promise.all (index 1)
+    at async plugins (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:21508:11)
+    at async processResult (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:21546:13)[31m
+    at aggregateBindingErrorsIntoJsError (file:///d:/MAAOS/frontend/node_modules/rolldown/dist/shared/error-BHRSI0R7.mjs:48:18)
+    at unwrapBindingResult (file:///d:/MAAOS/frontend/node_modules/rolldown/dist/shared/error-BHRSI0R7.mjs:18:128)
+    at #build (file:///d:/MAAOS/frontend/node_modules/rolldown/dist/shared/rolldown-build-CtPvmZgJ.mjs:3276:34)
+    at async buildEnvironment (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:33061:66)
+    at async Object.build (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:33483:19)
+    at async Object.buildApp (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/chunks/node.js:33480:153)
+    at async CAC.<anonymous> (file:///d:/MAAOS/frontend/node_modules/vite/dist/node/cli.js:776:3) {
+  errors: [Getter/Setter]
+}[39m
+\n---STDOUT---\n[36mvite v8.1.5 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 1813 modules transformed.

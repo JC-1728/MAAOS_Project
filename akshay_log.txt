@@ -1,0 +1,2 @@
+Akshay ks: fix: add missing PWA metadata to index.html
+Akshay ks: Update project structure and logic

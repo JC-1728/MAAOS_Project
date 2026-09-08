@@ -11,6 +11,14 @@
     <link rel="apple-touch-icon" href="/icon-192.png" />
   </head>
   <body class="bg-paper">
+    <script>
+      window.addEventListener('error', function(e) {
+        document.body.innerHTML += '<div style="color:red;padding:20px;background:white;z-index:9999;position:absolute;top:0;">' + e.message + '<br>' + e.filename + ':' + e.lineno + '</div>';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        document.body.innerHTML += '<div style="color:red;padding:20px;background:white;z-index:9999;position:absolute;top:0;">Promise Rejection: ' + e.reason + '</div>';
+      });
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

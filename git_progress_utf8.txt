@@ -1,0 +1,28 @@
+﻿35dfea4 - Ann Maria: Merge Jessica's branch - resolved conflicts cleanly
+17a3d4e - Jessica Cherian: Complete dashboard and scheduling integration
+b1aaf34 - Ann Maria: chore: full team phase 6 megamerge
+2b93506 - Ann Maria: chore: merge Shijo's work
+44d5265 - Ann Maria: Merge remote-tracking branch 'origin/Shijo_varghese'
+051a8ab - Ann Maria: feat: setup ChromaDB vector index connection for search endpoint
+90b68b2 - Ann Maria: feat: integrate frontend WeeklyDigestPage with actual backend API endpoints
+c18e8e9 - Ann Maria: feat: add backend endpoints for SEARCH and ANALYTICS (Weekly Digest)
+630b9e1 - shijo14: feat(shijo): complete Coordinator AI, PDF Syllabus pipeline, Burnout Protection Agent, telemetry logs & unit tests
+da005bc - shijo14: Merge branch 'origin/annmaria' into Shijo_varghese
+dff45ab - shijo14: Merge branch 'origin/feature/jessica-landing-dashboard' into Shijo_varghese
+041954d - shijo14: chore: add gitignore and untrack pycache
+9433e79 - Jessica Cherian: Add adaptive timetable and rescheduling feature
+f030e06 - Ann Maria: ignore db and pycache
+6344c6c - Ann Maria: Code updates
+3e8f787 - Jessica Cherian: Complete dashboard UI and Gmail frontend integration
+253661d - Ann Maria: Add maaos-app and project files
+269f602 - shijo14: fix: Python 3.14 compatibility - replace passlib with direct bcrypt, lazy-load crewai
+7e77028 - shijo14: feat(backend): implement FastAPI auth, JWT security, and CrewAI agent setup
+5c9065c - shijo14: Merge remote-tracking branch 'origin/akshay-ks' into Shijo_varghese
+60a31ae - akshayy247: Add files via upload
+7112e1a - annmariavinu2004-cpu: Add files via upload
+a884993 - Jessica Cherian: Set up React frontend with Vite, Tailwind CSS, routing, and initial UI
+4bb2a76 - annmariavinu2004-cpu: Fix formatting and minor typo in README.md
+aae20d8 - Jessica Cherian: Add project documentation
+149d893 - Jessica Cherian: Add .gitkeep files for empty directories
+8b35d69 - Jessica Cherian: Add project overview to README.md
+e51e0d6 - Jessica Cherian: Initial project structure

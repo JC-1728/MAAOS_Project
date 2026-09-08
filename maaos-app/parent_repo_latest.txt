@@ -1,0 +1,15 @@
+Akshay ks: fix: add missing PWA metadata to index.html
+Ann Maria: Merge Jessica's branch - resolved conflicts cleanly
+Akshay ks: Update project structure and logic
+Jessica Cherian: Complete dashboard and scheduling integration
+Ann Maria: chore: full team phase 6 megamerge
+Ann Maria: chore: merge Shijo's work
+Ann Maria: Merge remote-tracking branch 'origin/Shijo_varghese'
+Ann Maria: feat: setup ChromaDB vector index connection for search endpoint
+Ann Maria: feat: integrate frontend WeeklyDigestPage with actual backend API endpoints
+Ann Maria: feat: add backend endpoints for SEARCH and ANALYTICS (Weekly Digest)
+shijo14: feat(shijo): complete Coordinator AI, PDF Syllabus pipeline, Burnout Protection Agent, telemetry logs & unit tests
+shijo14: Merge branch 'origin/annmaria' into Shijo_varghese
+shijo14: Merge branch 'origin/feature/jessica-landing-dashboard' into Shijo_varghese
+shijo14: chore: add gitignore and untrack pycache
+Jessica Cherian: Add adaptive timetable and rescheduling feature

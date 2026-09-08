@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
-import Dashboard from './pages/Dashboard.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
 import { NotificationProvider } from './components/NotificationContext.jsx'
 import { LatencyProvider } from './components/LatencyContext.jsx'
+import { ThemeProvider } from './context/ThemeContext.jsx'
 import './index.css'
 
 // Register PWA Service Worker for Offline Resilience
@@ -23,17 +24,19 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <LatencyProvider>
-      <NotificationProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </BrowserRouter>
-      </NotificationProvider>
-    </LatencyProvider>
+    <ThemeProvider>
+      <LatencyProvider>
+        <NotificationProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </Routes>
+          </BrowserRouter>
+        </NotificationProvider>
+      </LatencyProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 )
